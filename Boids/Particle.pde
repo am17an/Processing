@@ -41,19 +41,18 @@ class Particle {
 
 
   // FORCES -- 
+  // REF - natureofcode.com
   PVector seek(PVector target) {
     PVector desired = PVector.sub(target, location);
     desired.normalize();
-    // Calculating the desired velocity
-    // to target at max speed
+
     desired.mult(maxSpeed);
 
-    // Reynolds’s formula for steering force
+    
     PVector steer = PVector.sub(desired, velocity);
 
     steer.limit(maxForce);
-    // Using our physics model and applying the force
-    // to the object’s acceleration
+   
     return steer;
   }
 
@@ -74,7 +73,7 @@ class Particle {
     steer.limit(maxForce);
     return steer;
   }
-
+ 
   void wander() {
     PVector futureLocation = PVector.add(location, PVector.mult(velocity, 4));
     stroke(238);
@@ -242,14 +241,15 @@ class Particle {
 
   void display() {
     pushMatrix();
-    translate(location.x, location.y);
+    translate(location.x, location.y, location.z);
     float theta = velocity.heading()  - PI/2;
     rotate(theta);
-    stroke(238, map(PVector.dist(location, nearestFinger), 0, 100, 0, 100));
+    stroke(238, map(PVector.dist(location, nearestFinger), 0, 100, 50, 255));
+    //stroke(238);
     noFill();
     if(DEBUG) {
       arc(0., 0., PERIPHERY, PERIPHERY, -PI/6  + PI/2, PI/6 + PI/2);
-      text(degrees(velocity.heading()), 0, 0);
+      //text(degrees(velocity.heading()), 0, 0);
     }
     
     line(-5, 0, 0, 5);

@@ -10,14 +10,14 @@ ArrayList<Particle> particles;
 Attractor mouseAttractor;
 FlowField flow;
 
-int nParticles = 200;
+int nParticles = 250;
 float PERIPHERY = 50;
 
 boolean DEBUG = true;
 
 
 void setup() {
-  size(1200, 600, P2D);
+  size(1200, 600, P3D);
   
   cp5 = new ControlP5(this);
   
@@ -56,14 +56,19 @@ ArrayList<PVector> fingers = new ArrayList<PVector>();
 
 void draw() {
   background(51);
+  textSize(12);
   fingers.clear();
   for(Hand hand: leap.getHands()) {
     for(Finger finger: hand.getFingers()) {
       PVector pos = finger.getPosition();
-      ellipse(pos.x, pos.y, 20, 20);
+      pushMatrix();
+      ellipse(pos.x, pos.y, 40, 40);
+      popMatrix();
       fingers.add(pos);
     }
+    
   }
+  
   for(Particle p: particles) {
     p.closest(fingers);
     p.update();
