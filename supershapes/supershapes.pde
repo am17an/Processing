@@ -72,11 +72,13 @@ PVector[][] globe;
 
 int offset = 0;
 
+boolean on = false;
+
 float mchange = 0;
 void draw() {
   //translate(width/2, height/2);
   mchange += 0.02;
-  background(51);
+  background(255, 10);
   lights();
   pushMatrix();
   stroke(238);
@@ -92,10 +94,10 @@ void draw() {
   float n22 = n22S.getValue();
   float n23 = n23S.getValue();
 
-  for (int i = 0; i < latPoints; ++i) {
+  for (int i = 0; i < latPoints+1; ++i) {
     float theta = map(i, 0, latPoints, -PI, PI);
     float r1 = superShape(n1, n2, n3, m1, theta);
-    for (int j = 0; j < lonPoints; ++j) {
+    for (int j = 0; j < lonPoints+1; ++j) {
       float phi = map(j, 0, lonPoints, -HALF_PI, HALF_PI);
       float r2 = superShape(n21, n22, n23, m2, phi);
 
@@ -104,29 +106,41 @@ void draw() {
       float z = 200*r2*sin(phi);
 
       globe[i][j] = new PVector(x, y, z);
-      point(x, y, z);
+      //point(x, y, z);
     }
   }
 
-  offset += 5;
+  offset += 1;
 
-//  for (int i = 0; i < latPoints; ++i) {
-//    float hu = map(i, 0, latPoints, 0, 255*6);
-//    noFill();
-//    beginShape(TRIANGLE_STRIP);
-//    for (int j = 0; j < lonPoints+1; ++j) {
-//      PVector v1 = globe[i][j];
-//      PVector v2 = globe[i+1][j];
-//      vertex(v1.x, v1.y, v1.z);
-//      vertex(v2.x, v2.y, v2.z);
-//    }
-//    endShape();
-//  }
+  for (int i = 0; i < latPoints; ++i) {
+    float hu = map(i, 0, latPoints, 0, 255*6);
+    //noFill();
+    noStroke();
+    
+    beginShape(TRIANGLE_STRIP);
+    for (int j = 0; j < lonPoints+1; ++j) {
+      fill((j+offset)%20 < 10 ? 255 : 0);
+      PVector v1 = globe[i][j];
+      PVector v2 = globe[i+1][j];
+      vertex(v1.x, v1.y, v1.z);
+      vertex(v2.x, v2.y, v2.z);
+    }
+    endShape();
+  }
   popMatrix();
 
   gui();
+  
+  if(on) {
+    saveFrame("output/###.gif");
+  }
 }
 
+void keyPressed() {
+  if(key == 's') {
+    on = true;
+  }
+}
 void gui() {
   hint(DISABLE_DEPTH_TEST);
   cam.beginHUD();

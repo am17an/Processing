@@ -1,13 +1,13 @@
 
 float noiseScale = 1000;
-float intensity  = 2000;
-int nAgents = 50000;
+float intensity  = 200;
+int nAgents = 100;
 
 import toxi.color.*;
 import toxi.geom.*;
 float t = 0. ;
 
-int nThreads = 1000;
+int nThreads = 100;
 int nAgentsThread = nAgents/nThreads;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +16,7 @@ MyThread[] threads;
 ArrayList<Agent> agents = new ArrayList<Agent>();
 
 void setup() {
-  size(1200, 1600, P3D);
+  size(600, 600, P3D);
   smooth();
   background(238);
 
@@ -45,7 +45,7 @@ void draw() {
       threads[i].state.set(0);
     }
   }
-  t+=0.001;
+  t+=0.01;
   println(callsToDraw, threadsReady);
 
  
@@ -57,7 +57,7 @@ TColor c1 = TColor.newARGB(#F20D35);
 TColor c2 = TColor.newARGB(#AE0FC9);
 
 //color palette[] = {#000000, #7890A8, #304878, #181848, #F0A818};
-color palette[] = {#8B1820, #D2A520, #43437A, #DED5D0};
+color palette[] = {#333333};
 //color palette[] = {#C5A559, #937843, #E2BC6D, #FBD986, #FFFFC9, #333333, #333333, #333333};
 
 color getColor() {
@@ -67,17 +67,19 @@ color getColor() {
 // NOISE STUFF --
 
 float nc(float x, float y) {
-  noiseScale = map(y, 0, height, 100, 1000);
+  noiseScale = 2000;
   x /= noiseScale;
   y /= noiseScale;
+  
+  //return noise(x, y, t);
   float n = 0.0;
-  int steps = 3;
+  int steps = 5;
   float p = 1;
   for (int i = 0; i < steps; ++i) {
     n += noise(x, y)*p + 4*n;
     p/=4;
-    x*=6;
-    y*=6;
+    x*=3;
+    y*=3;
   }
   return n;
 }
